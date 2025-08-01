@@ -1,0 +1,62 @@
+Step-by-Step Deployment Guide
+1. Initial Setup
+Install Node.js (version 18 or higher)
+Clone or download the project to your local machine
+Navigate to the project directory
+2. Environment Configuration
+Create .env file in the root directory
+Add required environment variables:
+env
+
+NODE_ENV=productionPORT=3000SIP_URI=your_sip_uriSIP_WSS_URL=your_wss_urlSIP_USERNAME=your_usernameSIP_PASSWORD=your_password
+3. Dependencies Installation
+Open terminal in project directory
+Run command:
+bash
+Run
+npm install
+4. SIP Configuration
+Open sip-config.js
+Update the configuration for your SBC type
+Configure STUN/TURN credentials in index.html
+5. Database Setup
+The SQLite database will be automatically created on first run
+No additional configuration needed as it's file-based
+6. Application Launch
+For development:
+bash
+Run
+npm run dev
+For production:
+bash
+Run
+npm start
+7. Verification Steps
+Open web browser
+Navigate to http://localhost:3000
+Check for:
+Page loads correctly
+WebSocket connection status
+Call button functionality
+8. Testing Features
+Click floating call button
+Enter test phone number
+Verify audio connection
+Test DTMF functionality
+9. Monitoring
+Watch server console for:
+Connection logs
+Error messages
+Call status updates
+Check browser console for:
+WebRTC connections
+SIP registration status
+10. Maintenance
+Regular checks:
+Server logs
+Database integrity
+WebSocket connections
+Updates:
+Keep Node.js updated
+Check for package updates
+Monitor security advisories

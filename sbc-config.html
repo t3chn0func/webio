@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SBC Configuration Manager</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .config-container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .config-section {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .codec-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .codec-item {
+            padding: 5px 10px;
+            background: #f5f5f5;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .btn-primary {
+            background: #007bff;
+            color: white;
+        }
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="config-container">
+        <h1>SBC Configuration Manager</h1>
+        
+        <div class="config-section">
+            <h2>SBC Server Selection</h2>
+            <div class="form-group">
+                <label for="sbc-type">SBC Type</label>
+                <select id="sbc-type">
+                    <option value="cube">Cisco CUBE</option>
+                    <option value="ribbon">Ribbon</option>
+                    <option value="oracle">Oracle</option>
+                    <option value="avaya">Avaya</option>
+                    <option value="freepbx">FreePBX</option>
+                    <option value="sangoma">Sangoma</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="config-section">
+            <h2>Server Configuration</h2>
+            <div class="form-group">
+                <label for="ws-url">WebSocket URL</label>
+                <input type="text" id="ws-url" placeholder="wss://ec2-52-221-184-153.ap-southeast-1.compute.amazonaws.com:8443">
+            </div>
+            <div class="form-group">
+                <label for="domain">Domain</label>
+                <input type="text" id="domain" placeholder="ec2-52-221-184-153.ap-southeast-1.compute.amazonaws.com">
+            </div>
+            <div class="form-group">
+                <label for="outbound-proxy">Outbound Proxy</label>
+                <input type="text" id="outbound-proxy" placeholder="ec2-52-221-184-153.ap-southeast-1.compute.amazonaws.com">
+            </div>
+            <div class="form-group">
+                <label for="port">Port</label>
+                <input type="number" id="port" placeholder="8443">
+            </div>
+        </div>
+
+        <div class="config-section">
+            <h2>Media Configuration</h2>
+            <div class="form-group">
+                <label>Audio</label>
+                <div>
+                    <input type="checkbox" id="audio-enabled" checked>
+                    <label for="audio-enabled">Enable Audio</label>
+                </div>
+                <div class="codec-list">
+                    <div class="codec-item">
+                        <input type="checkbox" id="codec-pcmu" checked>
+                        <label for="codec-pcmu">PCMU</label>
+                    </div>
+                    <div class="codec-item">
+                        <input type="checkbox" id="codec-pcma" checked>
+                        <label for="codec-pcma">PCMA</label>
+                    </div>
+                    <div class="codec-item">
+                        <input type="checkbox" id="codec-opus" checked>
+                        <label for="codec-opus">OPUS</label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="dtmf-type">DTMF Type</label>
+                <select id="dtmf-type">
+                    <option value="info">INFO</option>
+                    <option value="rfc2833">RFC 2833</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Video</label>
+                <div>
+                    <input type="checkbox" id="video-enabled">
+                    <label for="video-enabled">Enable Video</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="config-section">
+            <h2>Security Configuration</h2>
+            <div class="form-group">
+                <div>
+                    <input type="checkbox" id="secure" checked>
+                    <label for="secure">Enable Secure Connection</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <div>
+                    <input type="checkbox" id="verify-cert" checked>
+                    <label for="verify-cert">Verify Peer Certificate</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <div>
+                    <input type="checkbox" id="dtls-enabled" checked>
+                    <label for="dtls-enabled">Enable DTLS</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="config-section">
+            <h2>ICE Configuration</h2>
+            <div class="form-group">
+                <label for="stun-url">STUN Server URL</label>
+                <input type="text" id="stun-url" placeholder="stun:stun.ec2-52-221-184-153.ap-southeast-1.compute.amazonaws.com:3478">
+            </div>
+            <div class="form-group">
+                <label for="stun-username">Username</label>
+                <input type="text" id="stun-username">
+            </div>
+            <div class="form-group">
+                <label for="stun-credential">Credential</label>
+                <input type="password" id="stun-credential">
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <button class="btn btn-primary" onclick="saveConfig()">Save Configuration</button>
+            <button class="btn btn-secondary" onclick="loadConfig()">Load Configuration</button>
+            <button class="btn btn-secondary" onclick="resetConfig()">Reset</button>
+        </div>
+    </div>
+
+    <script src="sbc-config.js"></script>
+</body>
+</html>

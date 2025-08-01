@@ -1,0 +1,59 @@
+{
+    "family": "webrtc-sip-api",
+    "networkMode": "awsvpc",
+    "requiresCompatibilities": ["FARGATE"],
+    "cpu": "512",
+    "memory": "1024",
+    "executionRoleArn": "arn:aws:iam::<account-id>:role/ecsTaskExecutionRole",
+    "containerDefinitions": [
+        {
+            "name": "webrtc-sip-api",
+            "image": "<account-id>.dkr.ecr.<region>.amazonaws.com/webrtc-sip-api:latest",
+            "portMappings": [
+                {
+                    "containerPort": 3000,
+                    "protocol": "tcp"
+                }
+            ],
+            "environment": [
+                {
+                    "name": "NODE_ENV",
+                    "value": "production"
+                }
+            ],
+            "secrets": [
+                {
+                    "name": "API_KEY",
+                    "valueFrom": "arn:aws:ssm:<region>:<account-id>:parameter/webrtc-sip-api/api-key"
+                },
+                {
+                    "name": "API_SECRET",
+                    "valueFrom": "arn:aws:ssm:<region>:<account-id>:parameter/webrtc-sip-api/api-secret"
+                },
+                {
+                    "name": "SIP_DOMAIN",
+                    "valueFrom": "arn:aws:ssm:<region>:<account-id>:parameter/webrtc-sip-api/sip-domain"
+                },
+                {
+                    "name": "SIP_WSS_URL",
+                    "valueFrom": "arn:aws:ssm:<region>:<account-id>:parameter/webrtc-sip-api/sip-wss-url"
+                }
+            ],
+            "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-group": "/ecs/webrtc-sip-api",
+                    "awslogs-region": "<region>",
+                    "awslogs-stream-prefix": "ecs"
+                }
+            },
+            "healthCheck": {
+                "command": ["CMD-SHELL", "curl -f http://localhost:3000/api/health || exit 1"],
+                "interval": 30,
+                "timeout": 5,
+                "retries": 3,
+                "startPeriod": 60
+            }
+        }
+    ]
+}

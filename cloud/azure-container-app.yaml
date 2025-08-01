@@ -1,0 +1,65 @@
+name: webrtc-sip-api
+type: Microsoft.App/containerApps
+apiVersion: 2022-03-01
+location: <region>
+properties:
+  managedEnvironmentId: /subscriptions/<subscription-id>/resourceGroups/<resource-group>/providers/Microsoft.App/managedEnvironments/<environment-name>
+  configuration:
+    secrets:
+      - name: api-key
+        value: <api-key>
+      - name: api-secret
+        value: <api-secret>
+      - name: sip-domain
+        value: <sip-domain>
+      - name: sip-wss-url
+        value: <sip-wss-url>
+    ingress:
+      external: true
+      targetPort: 3000
+      transport: http
+      allowInsecure: false
+    registries:
+      - server: <registry-name>.azurecr.io
+        username: <username>
+        passwordSecretRef: registry-password
+  template:
+    containers:
+      - name: webrtc-sip-api
+        image: <registry-name>.azurecr.io/webrtc-sip-api:latest
+        env:
+          - name: NODE_ENV
+            value: production
+          - name: API_KEY
+            secretRef: api-key
+          - name: API_SECRET
+            secretRef: api-secret
+          - name: SIP_DOMAIN
+            secretRef: sip-domain
+          - name: SIP_WSS_URL
+            secretRef: sip-wss-url
+        resources:
+          cpu: 0.5
+          memory: 1Gi
+        probes:
+          - type: liveness
+            httpGet:
+              path: /api/health
+              port: 3000
+            initialDelaySeconds: 10
+            periodSeconds: 30
+          - type: readiness
+            httpGet:
+              path: /api/health
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+    scale:
+      minReplicas: 1
+      maxReplicas: 10
+      rules:
+        - name: http-rule
+          http:
+            metadata:
+              concurrentRequests: "100"
+    revisionSuffix: v1
